@@ -16,31 +16,33 @@ syntax = "proto3";
 
 package grafeas.v1beta1;
 
-option go_package = "github.com/grafeas/grafeas/proto/v1beta1/grafeas_go_proto";
-option java_multiple_files = true;
-option java_package = "io.grafeas.v1beta1";
-option objc_class_prefix = "GRA";
-
 import "google/api/annotations.proto";
 import "google/api/client.proto";
 import "google/api/field_behavior.proto";
+import "google/api/policy.proto";
 import "google/api/resource.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/field_mask.proto";
 import "google/protobuf/timestamp.proto";
-import "proto/v1beta1/attestation.proto";
-import "proto/v1beta1/build.proto";
-import "proto/v1beta1/common.proto";
-import "proto/v1beta1/deployment.proto";
-import "proto/v1beta1/discovery.proto";
-import "proto/v1beta1/image.proto";
-import "proto/v1beta1/intoto.proto";
-import "proto/v1beta1/package.proto";
-import "proto/v1beta1/provenance.proto";
-import "proto/v1beta1/sbom.proto";
-import "proto/v1beta1/spdx.proto";
-import "proto/v1beta1/vex.proto";
-import "proto/v1beta1/vulnerability.proto";
+import "third_party/grafeas/v1beta1/proto/attestation.proto";
+import "third_party/grafeas/v1beta1/proto/build.proto";
+import "third_party/grafeas/v1beta1/proto/common.proto";
+import "third_party/grafeas/v1beta1/proto/deployment.proto";
+import "third_party/grafeas/v1beta1/proto/discovery.proto";
+import "third_party/grafeas/v1beta1/proto/image.proto";
+import "third_party/grafeas/v1beta1/proto/intoto.proto";
+import "third_party/grafeas/v1beta1/proto/package.proto";
+import "third_party/grafeas/v1beta1/proto/provenance.proto";
+import "third_party/grafeas/v1beta1/proto/sbom.proto";
+import "third_party/grafeas/v1beta1/proto/spdx.proto";
+import "third_party/grafeas/v1beta1/proto/vex.proto";
+import "third_party/grafeas/v1beta1/proto/vulnerability.proto";
+
+option go_package = "github.com/grafeas/grafeas/proto/v1beta1/grafeas_go_proto";
+option java_multiple_files = true;
+option java_package = "io.grafeas.v1beta1";
+option objc_class_prefix = "GRA";
+option use_java_stubby_library = true;
 
 // [Grafeas](grafeas.io) API.
 //
@@ -66,7 +68,7 @@ service GrafeasV1Beta1 {
       }
     };
     option (google.api.method_signature) = "name";
-  };
+  }
 
   // Lists occurrences for the specified project.
   rpc ListOccurrences(ListOccurrencesRequest)
@@ -78,7 +80,7 @@ service GrafeasV1Beta1 {
       }
     };
     option (google.api.method_signature) = "parent,filter";
-  };
+  }
 
   // Deletes the specified occurrence. For example, use this method to delete an
   // occurrence when the occurrence is no longer applicable for the given
@@ -92,7 +94,7 @@ service GrafeasV1Beta1 {
       }
     };
     option (google.api.method_signature) = "name";
-  };
+  }
 
   // Creates a new occurrence.
   rpc CreateOccurrence(CreateOccurrenceRequest) returns (Occurrence) {
@@ -105,7 +107,15 @@ service GrafeasV1Beta1 {
       }
     };
     option (google.api.method_signature) = "parent,occurrence";
-  };
+    option (google.api.method_policy) = {
+      request_policies {
+        selector: "parent"
+        location_selector: "parent",
+      }
+      metadata { key: "method_type", value: "CREATE" }
+      flags: "FAIL_CLOSED_LOCATION_POLICY"
+    };
+  }
 
   // Creates new occurrences in batch.
   rpc BatchCreateOccurrences(BatchCreateOccurrencesRequest)
@@ -119,7 +129,15 @@ service GrafeasV1Beta1 {
       }
     };
     option (google.api.method_signature) = "parent,occurrences";
-  };
+    option (google.api.method_policy) = {
+      request_policies {
+        selector: "parent"
+        location_selector: "parent",
+      }
+      metadata { key: "method_type", value: "CREATE" }
+      flags: "FAIL_CLOSED_LOCATION_POLICY"
+    };
+  }
 
   // Updates the specified occurrence.
   rpc UpdateOccurrence(UpdateOccurrenceRequest) returns (Occurrence) {
@@ -132,7 +150,7 @@ service GrafeasV1Beta1 {
       }
     };
     option (google.api.method_signature) = "name,occurrence,update_mask";
-  };
+  }
 
   // Gets the note attached to the specified occurrence. Consumer projects can
   // use this method to get a note that belongs to a provider project.
@@ -144,7 +162,7 @@ service GrafeasV1Beta1 {
       }
     };
     option (google.api.method_signature) = "name";
-  };
+  }
 
   // Gets the specified note.
   rpc GetNote(GetNoteRequest) returns (Note) {
@@ -155,7 +173,7 @@ service GrafeasV1Beta1 {
       }
     };
     option (google.api.method_signature) = "name";
-  };
+  }
 
   // Lists notes for the specified project.
   rpc ListNotes(ListNotesRequest) returns (ListNotesResponse) {
@@ -166,7 +184,7 @@ service GrafeasV1Beta1 {
       }
     };
     option (google.api.method_signature) = "parent,filter";
-  };
+  }
 
   // Deletes the specified note.
   rpc DeleteNote(DeleteNoteRequest) returns (google.protobuf.Empty) {
@@ -177,7 +195,7 @@ service GrafeasV1Beta1 {
       }
     };
     option (google.api.method_signature) = "name";
-  };
+  }
 
   // Creates a new note.
   rpc CreateNote(CreateNoteRequest) returns (Note) {
@@ -190,7 +208,15 @@ service GrafeasV1Beta1 {
       }
     };
     option (google.api.method_signature) = "parent,note_id,note";
-  };
+    option (google.api.method_policy) = {
+      request_policies {
+        selector: "parent"
+        location_selector: "parent",
+      }
+      metadata { key: "method_type", value: "CREATE" }
+      flags: "FAIL_CLOSED_LOCATION_POLICY"
+    };
+  }
 
   // Creates new notes in batch.
   rpc BatchCreateNotes(BatchCreateNotesRequest)
@@ -204,7 +230,15 @@ service GrafeasV1Beta1 {
       }
     };
     option (google.api.method_signature) = "parent,notes";
-  };
+    option (google.api.method_policy) = {
+      request_policies {
+        selector: "parent"
+        location_selector: "parent",
+      }
+      metadata { key: "method_type", value: "CREATE" }
+      flags: "FAIL_CLOSED_LOCATION_POLICY"
+    };
+  }
 
   // Updates the specified note.
   rpc UpdateNote(UpdateNoteRequest) returns (Note) {
@@ -217,7 +251,7 @@ service GrafeasV1Beta1 {
       }
     };
     option (google.api.method_signature) = "name,note,update_mask";
-  };
+  }
 
   // Lists occurrences referencing the specified note. Provider projects can use
   // this method to get all occurrences across consumer projects referencing the
@@ -231,7 +265,7 @@ service GrafeasV1Beta1 {
       }
     };
     option (google.api.method_signature) = "name,filter";
-  };
+  }
 
   // Gets a summary of the number and severity of occurrences.
   rpc GetVulnerabilityOccurrencesSummary(
@@ -244,8 +278,8 @@ service GrafeasV1Beta1 {
       }
     };
     option (google.api.method_signature) = "parent,filter";
-  };
-};
+  }
+}
 
 // An instance of an analysis type that has been found on a resource.
 message Occurrence {
@@ -402,7 +436,8 @@ message Note {
     // A note describing an SPDX File.
     grafeas.v1beta1.spdx.RelationshipNote spdx_relationship = 21;
     // A note describing a vulnerability assessment.
-    grafeas.v1beta1.vex.VulnerabilityAssessmentNote vulnerability_assessment = 22;
+    grafeas.v1beta1.vex.VulnerabilityAssessmentNote vulnerability_assessment =
+        22;
     // A note describing an SBOM reference.
     grafeas.v1beta1.sbom.SBOMReferenceNote sbom_reference = 23;
   }
@@ -426,7 +461,8 @@ message ListOccurrencesRequest {
   // `projects/[PROJECT_ID]`.
   string parent = 1 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference).type = "cloudresourcemanager.googleapis.com/Project"
+    (google.api.resource_reference).type =
+        "cloudresourcemanager.googleapis.com/Project"
   ];
 
   // The filter expression.
@@ -468,7 +504,8 @@ message CreateOccurrenceRequest {
   // the occurrence is to be created.
   string parent = 1 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference).type = "cloudresourcemanager.googleapis.com/Project"
+    (google.api.resource_reference).type =
+        "cloudresourcemanager.googleapis.com/Project"
   ];
   // The occurrence to create.
   Occurrence occurrence = 2 [(google.api.field_behavior) = REQUIRED];
@@ -514,7 +551,8 @@ message ListNotesRequest {
   // `projects/[PROJECT_ID]`.
   string parent = 1 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference).type = "cloudresourcemanager.googleapis.com/Project"
+    (google.api.resource_reference).type =
+        "cloudresourcemanager.googleapis.com/Project"
   ];
 
   // The filter expression.
@@ -554,7 +592,8 @@ message CreateNoteRequest {
   // the note is to be created.
   string parent = 1 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference).type = "cloudresourcemanager.googleapis.com/Project"
+    (google.api.resource_reference).type =
+        "cloudresourcemanager.googleapis.com/Project"
   ];
   // The ID to use for this note.
   string note_id = 2 [(google.api.field_behavior) = REQUIRED];
@@ -606,10 +645,12 @@ message BatchCreateNotesRequest {
   // the notes are to be created.
   string parent = 1 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference).type = "cloudresourcemanager.googleapis.com/Project"
+    (google.api.resource_reference).type =
+        "cloudresourcemanager.googleapis.com/Project"
   ];
 
-  // The notes to create, the key is expected to be the note ID. Max allowed length is 1000.
+  // The notes to create, the key is expected to be the note ID. Max allowed
+  // length is 1000.
   map<string, Note> notes = 2 [(google.api.field_behavior) = REQUIRED];
 }
 
@@ -625,7 +666,8 @@ message BatchCreateOccurrencesRequest {
   // the occurrences are to be created.
   string parent = 1 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference).type = "cloudresourcemanager.googleapis.com/Project"
+    (google.api.resource_reference).type =
+        "cloudresourcemanager.googleapis.com/Project"
   ];
 
   // The occurrences to create. Max allowed length is 1000.
@@ -644,7 +686,8 @@ message GetVulnerabilityOccurrencesSummaryRequest {
   // `projects/[PROJECT_ID]`.
   string parent = 1 [
     (google.api.field_behavior) = REQUIRED,
-    (google.api.resource_reference).type = "cloudresourcemanager.googleapis.com/Project"
+    (google.api.resource_reference).type =
+        "cloudresourcemanager.googleapis.com/Project"
   ];
   // The filter expression.
   string filter = 2;
