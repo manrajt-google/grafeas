@@ -16,31 +16,37 @@ syntax = "proto3";
 
 package grafeas.v1;
 
-option go_package = "github.com/grafeas/grafeas/proto/v1/grafeas_go_proto";
-option java_multiple_files = true;
-option java_package = "io.grafeas.v1";
-option objc_class_prefix = "GRA";
-
 import "google/api/annotations.proto";
 import "google/api/client.proto";
 import "google/api/field_behavior.proto";
+import "google/api/policy.proto";
 import "google/api/resource.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/field_mask.proto";
 import "google/protobuf/timestamp.proto";
-import "proto/v1/attestation.proto";
-import "proto/v1/build.proto";
-import "proto/v1/common.proto";
-import "proto/v1/deployment.proto";
-import "proto/v1/discovery.proto";
-import "proto/v1/image.proto";
-import "proto/v1/package.proto";
-import "proto/v1/upgrade.proto";
-import "proto/v1/vulnerability.proto";
-import "proto/v1/compliance.proto";
-import "proto/v1/dsse_attestation.proto";
-import "proto/v1/vex.proto";
-import "proto/v1/sbom.proto";
+import "third_party/grafeas/proto/v1/attestation.proto";
+import "third_party/grafeas/proto/v1/build.proto";
+import "third_party/grafeas/proto/v1/common.proto";
+import "third_party/grafeas/proto/v1/compliance.proto";
+import "third_party/grafeas/proto/v1/deployment.proto";
+import "third_party/grafeas/proto/v1/discovery.proto";
+import "third_party/grafeas/proto/v1/dsse_attestation.proto";
+import "third_party/grafeas/proto/v1/image.proto";
+import "third_party/grafeas/proto/v1/package.proto";
+import "third_party/grafeas/proto/v1/sbom.proto";
+import "third_party/grafeas/proto/v1/upgrade.proto";
+import "third_party/grafeas/proto/v1/vex.proto";
+import "third_party/grafeas/proto/v1/vulnerability.proto";
+
+option go_package = "github.com/grafeas/grafeas/proto/v1/grafeas_go_proto";
+option java_multiple_files = true;
+option java_package = "io.grafeas.v1";
+option objc_class_prefix = "GRA";
+option use_java_stubby_library = true;
+option (google.api.resource_definition) = {
+  type: "grafeas.io/Project"
+  pattern: "projects/{project}"
+};
 
 // [Grafeas](https://grafeas.io) API.
 //
@@ -66,7 +72,7 @@ service Grafeas {
       }
     };
     option (google.api.method_signature) = "name";
-  };
+  }
 
   // Lists occurrences for the specified project.
   rpc ListOccurrences(ListOccurrencesRequest)
@@ -78,7 +84,7 @@ service Grafeas {
       }
     };
     option (google.api.method_signature) = "parent,filter";
-  };
+  }
 
   // Deletes the specified occurrence. For example, use this method to delete an
   // occurrence when the occurrence is no longer applicable for the given
@@ -92,7 +98,7 @@ service Grafeas {
       }
     };
     option (google.api.method_signature) = "name";
-  };
+  }
 
   // Creates a new occurrence.
   rpc CreateOccurrence(CreateOccurrenceRequest) returns (Occurrence) {
@@ -104,8 +110,16 @@ service Grafeas {
         body: "occurrence"
       }
     };
+    option (google.api.method_policy) = {
+      request_policies {
+        selector: "parent"
+        location_selector: "parent",
+      }
+      metadata { key: "method_type", value: "CREATE" }
+      flags: "FAIL_CLOSED_LOCATION_POLICY"
+    };
     option (google.api.method_signature) = "parent,occurrence";
-  };
+  }
 
   // Creates new occurrences in batch.
   rpc BatchCreateOccurrences(BatchCreateOccurrencesRequest)
@@ -119,7 +133,15 @@ service Grafeas {
       }
     };
     option (google.api.method_signature) = "parent,occurrences";
-  };
+    option (google.api.method_policy) = {
+      request_policies {
+        selector: "parent"
+        location_selector: "parent",
+      }
+      metadata { key: "method_type", value: "CREATE" }
+      flags: "FAIL_CLOSED_LOCATION_POLICY"
+    };
+  }
 
   // Updates the specified occurrence.
   rpc UpdateOccurrence(UpdateOccurrenceRequest) returns (Occurrence) {
@@ -132,7 +154,7 @@ service Grafeas {
       }
     };
     option (google.api.method_signature) = "name,occurrence,update_mask";
-  };
+  }
 
   // Gets the note attached to the specified occurrence. Consumer projects can
   // use this method to get a note that belongs to a provider project.
@@ -144,29 +166,25 @@ service Grafeas {
       }
     };
     option (google.api.method_signature) = "name";
-  };
+  }
 
   // Gets the specified note.
   rpc GetNote(GetNoteRequest) returns (Note) {
     option (google.api.http) = {
       get: "/v1/{name=projects/*/notes/*}"
-      additional_bindings {
-        get: "/v1/{name=projects/*/locations/*/notes/*}"
-      }
+      additional_bindings { get: "/v1/{name=projects/*/locations/*/notes/*}" }
     };
     option (google.api.method_signature) = "name";
-  };
+  }
 
   // Lists notes for the specified project.
   rpc ListNotes(ListNotesRequest) returns (ListNotesResponse) {
     option (google.api.http) = {
       get: "/v1/{parent=projects/*}/notes"
-      additional_bindings {
-        get: "/v1/{parent=projects/*/locations/*}/notes"
-      }
+      additional_bindings { get: "/v1/{parent=projects/*/locations/*}/notes" }
     };
     option (google.api.method_signature) = "parent,filter";
-  };
+  }
 
   // Deletes the specified note.
   rpc DeleteNote(DeleteNoteRequest) returns (google.protobuf.Empty) {
@@ -177,7 +195,7 @@ service Grafeas {
       }
     };
     option (google.api.method_signature) = "name";
-  };
+  }
 
   // Creates a new note.
   rpc CreateNote(CreateNoteRequest) returns (Note) {
@@ -190,7 +208,15 @@ service Grafeas {
       }
     };
     option (google.api.method_signature) = "parent,note_id,note";
-  };
+    option (google.api.method_policy) = {
+      request_policies {
+        selector: "parent"
+        location_selector: "parent",
+      }
+      metadata { key: "method_type", value: "CREATE" }
+      flags: "FAIL_CLOSED_LOCATION_POLICY"
+    };
+  }
 
   // Creates new notes in batch.
   rpc BatchCreateNotes(BatchCreateNotesRequest)
@@ -204,7 +230,15 @@ service Grafeas {
       }
     };
     option (google.api.method_signature) = "parent,notes";
-  };
+    option (google.api.method_policy) = {
+      request_policies {
+        selector: "parent"
+        location_selector: "parent",
+      }
+      metadata { key: "method_type", value: "CREATE" }
+      flags: "FAIL_CLOSED_LOCATION_POLICY"
+    };
+  }
 
   // Updates the specified note.
   rpc UpdateNote(UpdateNoteRequest) returns (Note) {
@@ -217,7 +251,7 @@ service Grafeas {
       }
     };
     option (google.api.method_signature) = "name,note,update_mask";
-  };
+  }
 
   // Lists occurrences referencing the specified note. Provider projects can use
   // this method to get all occurrences across consumer projects referencing the
@@ -231,8 +265,8 @@ service Grafeas {
       }
     };
     option (google.api.method_signature) = "name,filter";
-  };
-};
+  }
+}
 
 // An instance of an analysis type that has been found on a resource.
 message Occurrence {
@@ -248,7 +282,8 @@ message Occurrence {
   // Required. Immutable. A URI that represents the resource for which the
   // occurrence applies. For example,
   // `https://gcr.io/project/image@sha256:123abc` for a Docker image.
-  string resource_uri = 2;
+  string resource_uri = 2
+      [(google.api.field_policy) = { custom_org_policy_accessibility: PUBLIC }];
 
   // Required. Immutable. The analysis note associated with this occurrence, in
   // the form of `projects/[PROVIDER_ID]/notes/[NOTE_ID]`. This field can be
@@ -283,9 +318,13 @@ message Occurrence {
     // Describes the deployment of an artifact on a runtime.
     grafeas.v1.DeploymentOccurrence deployment = 12;
     // Describes when a resource was discovered.
-    grafeas.v1.DiscoveryOccurrence discovery = 13;
+    grafeas.v1.DiscoveryOccurrence discovery = 13 [
+      (google.api.field_policy) = { custom_org_policy_accessibility: PUBLIC }
+    ];
     // Describes an attestation of an artifact.
-    grafeas.v1.AttestationOccurrence attestation = 14;
+    grafeas.v1.AttestationOccurrence attestation = 14 [
+      (google.api.field_policy) = { custom_org_policy_accessibility: PUBLIC }
+    ];
     // Describes an available package upgrade on the linked resource.
     grafeas.v1.UpgradeOccurrence upgrade = 15;
     // Describes a compliance violation on a linked resource.
@@ -293,11 +332,14 @@ message Occurrence {
     // Describes an attestation of an artifact using dsse.
     grafeas.v1.DSSEAttestationOccurrence dsse_attestation = 17;
     // Describes a specific SBOM reference occurrences.
-    grafeas.v1.SBOMReferenceOccurrence sbom_reference = 19;
+    grafeas.v1.SBOMReferenceOccurrence sbom_reference = 19 [
+      (google.api.field_policy) = { custom_org_policy_accessibility: PUBLIC }
+    ];
   }
 
   // https://github.com/secure-systems-lab/dsse
-  grafeas.v1.Envelope envelope = 18;
+  grafeas.v1.Envelope envelope = 18
+      [(google.api.field_policy) = { custom_org_policy_accessibility: PUBLIC }];
 }
 
 // A type of analysis that can be done for a resource.
@@ -325,7 +367,8 @@ message Note {
   repeated grafeas.v1.RelatedUrl related_url = 5;
 
   // Time of expiration for this note. Empty if note does not expire.
-  google.protobuf.Timestamp expiration_time = 6;
+  google.protobuf.Timestamp expiration_time = 6
+      [(google.api.field_policy) = { custom_org_policy_accessibility: PUBLIC }];
 
   // Output only. The time this note was created. This field can be used as a
   // filter in list requests.
@@ -336,7 +379,8 @@ message Note {
   google.protobuf.Timestamp update_time = 8;
 
   // Other notes related to this note.
-  repeated string related_note_names = 9;
+  repeated string related_note_names = 9
+      [(google.api.field_policy) = { custom_org_policy_accessibility: PUBLIC }];
 
   // Required. Immutable. The type of analysis this note represents.
   oneof type {
@@ -351,9 +395,13 @@ message Note {
     // A note describing something that can be deployed.
     grafeas.v1.DeploymentNote deployment = 14;
     // A note describing the initial analysis of a resource.
-    grafeas.v1.DiscoveryNote discovery = 15;
+    grafeas.v1.DiscoveryNote discovery = 15 [
+      (google.api.field_policy) = { custom_org_policy_accessibility: PUBLIC }
+    ];
     // A note describing an attestation role.
-    grafeas.v1.AttestationNote attestation = 16;
+    grafeas.v1.AttestationNote attestation = 16 [
+      (google.api.field_policy) = { custom_org_policy_accessibility: PUBLIC }
+    ];
     // A note describing available package upgrades.
     grafeas.v1.UpgradeNote upgrade = 17;
     // A note describing a compliance check.
@@ -361,9 +409,13 @@ message Note {
     // A note describing a dsse attestation note.
     grafeas.v1.DSSEAttestationNote dsse_attestation = 19;
     // A note describing a vulnerability assessment.
-    grafeas.v1.VulnerabilityAssessmentNote vulnerability_assessment = 20;
+    grafeas.v1.VulnerabilityAssessmentNote vulnerability_assessment = 20 [
+      (google.api.field_policy) = { custom_org_policy_accessibility: PUBLIC }
+    ];
     // A note describing an SBOM reference.
-    grafeas.v1.SBOMReferenceNote sbom_reference = 21;
+    grafeas.v1.SBOMReferenceNote sbom_reference = 21 [
+      (google.api.field_policy) = { custom_org_policy_accessibility: PUBLIC }
+    ];
   }
 }
 
